@@ -1,8 +1,5 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
-using System.Linq;
-using Facepunch.Steamworks;
+﻿using UnityEngine;
+using Steamworks;
 
 public class SteamTest : MonoBehaviour
 {
@@ -11,44 +8,27 @@ public class SteamTest : MonoBehaviour
         // Don't destroy this when loading new scenes
         DontDestroyOnLoad(gameObject);
 
-        // Configure for Unity
-        // This is VERY important - call this before doing anything
-        Facepunch.Steamworks.Config.ForUnity(Application.platform.ToString());
-
         // Create the steam client using the test AppID (or your own AppID eventually)
-        new Facepunch.Steamworks.Client(480);
-
-        // Make sure we started up okay
-        if (Client.Instance == null)
+        try
         {
-            Debug.LogError("Error starting Steam!");
-            return;
+            SteamClient.Init(480);
+        }
+        catch (System.Exception e)
+        {
+            // Couldn't init for some reason (steam is closed etc)
         }
 
         // Print out some basic information
-        Debug.Log("My Steam ID: " + Client.Instance.SteamId);
-        Debug.Log("My Steam Username: " + Client.Instance.Username);
-        Debug.Log("My Friend Count: " + Client.Instance.Friends.AllFriends.Count());
+        Debug.Log("My Steam ID: " + SteamClient.SteamId);
+        Debug.Log("My Steam Username: " + SteamClient.Name);
     }
 
-    private void OnDestroy()
+    void OnDestroy()
     {
-        if (Client.Instance != null)
+        if (SteamClient.IsLoggedOn)
         {
-            // Properly get rid of the client if this object is destroyed
-            Client.Instance.Dispose();
+            Debug.Log("Test");
+            SteamClient.Shutdown();
         }
-
-    }
-
-
-    void Update()
-    {
-        if (Client.Instance != null)
-        {
-            // This needs to be called in Update for the library to properly function
-            Client.Instance.Update();
-        }
-
     }
 }
