@@ -17,8 +17,8 @@ public class Client : MonoBehaviour
         }
 
         // Print out some basic information
-        //Debug.Log("My Steam ID: " + SteamClient.SteamId);
-        //Debug.Log("My Steam Username: " + SteamClient.Name);
+        Debug.LogError("My Steam ID: " + SteamClient.SteamId);
+        Debug.LogWarning("My Steam Username: " + SteamClient.Name);
     }
 
     void Update()
